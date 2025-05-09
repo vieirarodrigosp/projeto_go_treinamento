@@ -11,7 +11,7 @@ on:
 
 jobs:
 
-  build:
+  ci:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -25,7 +25,10 @@ jobs:
       run: docker compose up -d postgres
 
     - name: lint
-      run: docker run --rm -it -v $(CURDIR):/app -w /app golangci/golangci-lint golangci-lint run controllers/ database/ models/ routes/
+      uses: golangci/golangci-lint-action@v8
+      with:
+        version: v2.1
+        args: controllers/ database/ models/ routes/
 
     - name: Test
       run: go test main_test.go
